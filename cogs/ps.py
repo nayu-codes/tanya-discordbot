@@ -304,7 +304,7 @@ class PS(commands.Cog):
             status = "" #Reset
             line = re.sub(r'[*]', '', line) #Remove * in the line
             if line_no == 0: # First line
-                date = line[-6:] # Grabs last 6 characters from the line
+                date = line[-8:] # Grabs last 8 characters from the line
                 print("Date: {}".format(date))
                 continue #We done here, move on
             if line == self.unit[-3:] or line_no == present or line_no == absent or line == "":
