@@ -1,0 +1,11 @@
+python>=3.5.3
+discord.py>=1.7.3
+asyncio
+traceback
+datetime
+sys
+re
+json
+os
+asyncio
+discord-components
