@@ -1,10 +1,12 @@
 import discord
 from discord.ext import commands
-from discord_components import ComponentsBot
+from discord_components import ComponentsBot, Button, Select, SelectOption, ActionRow
 
 import sys, traceback
 
+import re
 import asyncio
+import subprocess
 import datetime
 import json
 import os
@@ -486,5 +488,143 @@ async def _reload(ctx, *, cog: str):
             await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
     else:
         await ctx.send(f'`{cog}` was reloaded.')
+
+async def run_shell(command):
+        try:
+            process = await asyncio.create_subprocess_shell(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            result = await process.communicate()
+        except NotImplementedError:
+            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            result = await self.bot.loop.run_in_executor(None, process.communicate)
+
+        return [output.decode() for output in result]
+
+@bot.command(name="gitupdate", hidden=True)
+@commands.is_owner()
+async def gitupdate(ctx):
+    """Command to update the bot from the Github Source."""
+    msg = await ctx.reply(embed=discord.Embed(title="Updating from Github, please wait...", description="```shell\n$ git pull -s recursive -X theirs origin main --no-rebase```", colour=0xFFFF00), mention_author=False)
+    result = await run_shell('git pull -s recursive -X theirs origin main --no-rebase')
+    output = '\n'.join(result)
+    em = discord.Embed(title="Updated from Github", description="```shell\n{}```".format(output), colour=0x00ff00)
+
+    updated_cogs = re.findall(r"cogs\/(.*)\.py", output, re.MULTILINE)
+    if len(updated_cogs):
+        await msg.edit(
+            embed=em,
+            mention_author=False,
+            components = [Select(
+                placeholder=f"Select cogs here to reload one by one",
+                options=[
+                    SelectOption(label=name, description=f'Reload {name} cog', value=name)
+                    for name
+                    in updated_cogs
+                ],
+                max_values = len(updated_cogs)
+            ),
+            [
+                Button(label = "Reload All Cogs", style=1, custom_id = "all")
+            ]
+            ]
+        )
+    else:
+        await msg.edit(
+            embed=em,
+            mention_author=False
+        )
+        return
+    while True:
+        try:
+            selected = await bot.wait_for("interaction", check=lambda res: res.author == ctx.author and res.message == msg, timeout=60)
+            if selected.component_type == 3: #SelectOption
+                cogs_to_reload = selected.values
+                async with ctx.typing():
+                    for cog in cogs_to_reload:
+                        try:
+                            bot.unload_extension(f'cogs.{cog}')
+                            bot.load_extension(f'cogs.{cog}')
+                        except Exception as e:
+                            try:
+                                bot.load_extension(f'cogs.{cog}')
+                                with open('config.json') as config_file:
+                                    config = json.load(config_file)
+
+                                config["LOADED_COGS"].append(cog)
+
+                                outfile = open("config.json", "w")
+                                outfile.write(json.dumps(config, indent=4))
+                                outfile.close()
+                                await ctx.send(f'`{cog}` was reloaded.')
+                            except:
+                                await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+                        else:
+                            await ctx.send(f'`{cog}` was reloaded.')
+                    updated_cogs = [cog for cog in updated_cogs if cog not in cogs_to_reload]
+
+            elif selected.component_type == 2: #Button
+                if selected.custom_id == "all":
+                    async with ctx.typing():
+                        for cog in updated_cogs:
+                            try:
+                                bot.unload_extension(f'cogs.{cog}')
+                                bot.load_extension(f'cogs.{cog}')
+                            except Exception as e:
+                                try:
+                                    bot.load_extension(f'cogs.{cog}')
+                                    with open('config.json') as config_file:
+                                        config = json.load(config_file)
+
+                                    config["LOADED_COGS"].append(cog)
+
+                                    outfile = open("config.json", "w")
+                                    outfile.write(json.dumps(config, indent=4))
+                                    outfile.close()
+                                    await ctx.send(f'`{cog}` was reloaded.')
+                                except:
+                                    await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+                            else:
+                                    await ctx.send(f'`{cog}` was reloaded.')
+                        updated_cogs = []
+
+            if len(updated_cogs):
+                await msg.edit(
+                    embed=em,
+                    mention_author=False,
+                    components = [Select(
+                        placeholder=f"Select cogs here to reload one by one",
+                        options=[
+                            SelectOption(label=name, description=f'Reload {name} cog', value=name)
+                            for name
+                            in updated_cogs
+                        ],
+                        max_values = len(updated_cogs)
+                    ),
+                    [
+                        Button(label = "Reload All Cogs", style=1, custom_id = "all")
+                    ]
+                    ]
+                )
+                await selected.respond(type=7)
+            else:
+                await msg.edit(
+                    embed=em,
+                    mention_author=False,
+                    components = [
+                    [
+                        Button(label = "No more cogs available to reload", style=4, custom_id = "", disabled=True)
+                    ]
+                    ]
+                )
+                await selected.respond(type=7)
+                return
+
+        except asyncio.TimeoutError:
+            await msg.edit(
+                embed=em,
+                components=[
+                ]
+            )
+            break
+    return
 
 bot.run(config['BOT_TOKEN'])

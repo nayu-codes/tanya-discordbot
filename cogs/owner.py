@@ -1,6 +1,7 @@
 from discord.ext import commands
 import discord
 import os
+import re
 
 
 class Owner(commands.Cog):
@@ -9,15 +10,6 @@ class Owner(commands.Cog):
         self.bot = bot
 
 
-
-    @commands.command(name="gitupdate", hidden=True)
-    @commands.is_owner()
-    async def gitupdate(self, ctx):
-        try:
-            os.system('printf "\\n :qa! \\n" | git pull')
-            await ctx.send("Done")
-        except:
-            await ctx.send("An error occured")
 
     @commands.command(name="status", hidden=True)
     @commands.is_owner()

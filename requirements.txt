@@ -8,4 +8,4 @@ re
 json
 os
 asyncio
-discord-components
+discord-components>=2.0.0
