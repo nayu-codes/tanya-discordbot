@@ -8,4 +8,5 @@ re
 json
 os
 asyncio
+subprocess
 discord-components>=2.0.0

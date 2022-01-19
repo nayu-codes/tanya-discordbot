@@ -37,7 +37,7 @@ class PS(commands.Cog):
 
     def insert_ps(ctx, ps_am, ps_pm,name,am_status,pm_status):
         print(f'Doing for {name}: {am_status} | {pm_status}')
-        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF"
+        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF|HRWO|SHN|SHRO"
         common_ps = common_ps.split("|")
         leave_type = ["ll","ol", "ul","cl", "ccl", "uccl"]
         #AM Status
@@ -284,7 +284,7 @@ class PS(commands.Cog):
         error_names = "These people are not added into the Parade State and the total count as I couldn't detect the state. Please manually insert these people into AM/PM parade state and edit the numbers:"
 
         #setup
-        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF"
+        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF|HRWO|SHN|SHRO"
         common_ps = common_ps.split("|")
         #Sort Regulars
         reg_am = {}
@@ -538,7 +538,42 @@ class PS(commands.Cog):
         print(json.dumps(nsf_pm, indent=2))
         print(json.dumps(reg_am, indent=2))
         print(json.dumps(reg_pm, indent=2))
+
         #Time to generate Parade State! Fml
+        rank_order = {
+            "ME4-2": 0,
+            "ME4-1": 1,
+            "ME4": 2, #catch-all for ME4s
+            "LTA": 3,
+            "2LT": 4,
+            "ME3-3": 5,
+            "ME3-2": 6,
+            "ME3-1": 7,
+            "ME3": 8, #catch-all for ME3s
+            "1WO": 9,
+            "2WO": 10,
+            "3WO": 11,
+            "ME2-2": 12,
+            "ME2-1": 13,
+            "ME2": 14, #catch-all for ME2s
+            "MSG": 15,
+            "1SG": 16,
+            "2SG": 17,
+            "ME1-2": 18,
+            "ME1-1": 19,
+            "ME1-T": 20,
+            "ME1T": 21,
+            "ME1": 22,
+            "ME": 23,
+            "3SG": 24,
+            "SCT": 25,
+            "CFC": 26,
+            "CPL": 27,
+            "LCP": 28,
+            "PFC": 29,
+            "PTE": 30,
+            "REC": 31
+        }
         am_header = "{}\nAM Parade State for {}\n".format(self.unit, date)
         message_am = ""
 
@@ -549,29 +584,33 @@ class PS(commands.Cog):
         for status in reg_am:
             if status not in com_am:
                 com_am[status] = {
-                    "names": {}
+                    "names": []
                 }
             for name in reg_am[status]["names"]:
-                com_am[status]["names"][name] = reg_am[status]["names"][name]
+                com_am[status]["names"].append([name, reg_am[status]["names"][name]]) # Append [Name, Date]
             if status == "P" and debug != "debug":
                 continue
 
         for status in nsf_am:
             if status not in com_am:
                 com_am[status] = {
-                    "names": {}
+                    "names": []
                 }
-            for n, name in enumerate(nsf_am[status]["names"], start=1):
-                com_am[status]["names"][name] = nsf_am[status]["names"][name]
+            for name in nsf_am[status]["names"]:
+                com_am[status]["names"].append([name, nsf_am[status]["names"][name]]) # Append [Name, Date]
 
         for status in com_am:
             if status == "P" and debug != "debug": #Skip present people unless debug flag
                 continue
+
+            #Sort dict by rebuilding
+            com_am[status]["names"].sort(key=lambda name: rank_order[name[0].split(" ")[0]]) #take the rank part of name to sort by rank
+
             #Build for message
             status_list = ""
             for n, name in enumerate(com_am[status]["names"], start=1):
                 #status_list += f"\n{name}{f' {com_am[status]["names"][name]}' if len(com_am[status]["names"][name]) else ''}"
-                status_list += "\n{}. {}{}".format(n, name, f' {com_am[status]["names"][name]}' if len(com_am[status]["names"][name]) else '')
+                status_list += "\n{}. {}{}".format(n, name[0], f' {name[1]}' if len(name[1]) else '')
             #End build, append to message
             message_am += "\n\n*{}*: {}{}".format(status, len(com_am[status]["names"]), status_list)
 
@@ -612,29 +651,33 @@ class PS(commands.Cog):
         for status in reg_pm:
             if status == "P" and debug != "debug":
                 continue
+
             if status not in com_pm:
                 com_pm[status] = {
-                    "names": {}
+                    "names": []
                 }
             for name in reg_pm[status]["names"]:
-                com_pm[status]["names"][name] = reg_pm[status]["names"][name]
+                com_pm[status]["names"].append([name, reg_pm[status]["names"][name]])
 
         for status in nsf_pm:
             if status not in com_pm:
                 com_pm[status] = {
-                    "names": {}
+                    "names": []
                 }
-            for n, name in enumerate(nsf_pm[status]["names"], start=1):
-                com_pm[status]["names"][name] = nsf_pm[status]["names"][name]
+            for name in nsf_pm[status]["names"]:
+                com_pm[status]["names"].append([name, nsf_pm[status]["names"][name]])
 
         for status in com_pm:
             if status == "P" and debug != "debug": #Skip present people unless debug flag
                 continue
+
+            com_pm[status]["names"].sort(key=lambda name: rank_order[name[0].split(" ")[0]]) #take the rank part of name to sort by rank
+
             #Build for message
             status_list = ""
             for n, name in enumerate(com_pm[status]["names"], start=1):
                 #status_list += f"\n{name}{f' {com_am[status]["names"][name]}' if len(com_am[status]["names"][name]) else ''}"
-                status_list += "\n{}. {}{}".format(n, name, f' {com_pm[status]["names"][name]}' if len(com_pm[status]["names"][name]) else '')
+                status_list += "\n{}. {}{}".format(n, name[0], f' {name[1]}' if len(name[1]) else '')
             #End build, append to message
             message_pm += "\n\n*{}*: {}{}".format(status, len(com_pm[status]["names"]), status_list)
 
@@ -693,7 +736,7 @@ class PS(commands.Cog):
         error_names = "These people are not added into the Parade State and the total count as I couldn't detect the state. Please manually insert these people into AM/PM parade state and edit the numbers:"
 
         #setup
-        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF"
+        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF|HRWO|SHN|SHRO"
         common_ps = common_ps.split("|")
 
         #Start NSF PS.
@@ -906,7 +949,7 @@ class PS(commands.Cog):
         error_names = "These people are not added into the Parade State and the total count as I couldn't detect the state. Please manually insert these people into AM/PM parade state and edit the numbers:"
 
         #setup
-        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF"
+        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF|HRWO|SHN|SHRO"
         common_ps = common_ps.split("|")
         namelist = set()
 
