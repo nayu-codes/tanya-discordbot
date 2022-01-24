@@ -47,11 +47,6 @@ class PS(commands.Cog):
         else:
             cur_status = am_status.strip()
             status_date = ""
-        if cur_status.lower() in leave_type:
-            cur_status = "LL/OL/UL/CL"
-        elif "vrs" in cur_status.lower():
-            cur_status = "DUTY"
-            status_date = " (VRS)"
 
         #Alpha: Attempting to handle cases without brackets.
         if len(cur_status.split(" ")) > 1:
@@ -64,8 +59,14 @@ class PS(commands.Cog):
                     least_index = index
                     least_ps = possible_ps
             if least_index < 9999:
-                status_date = f' ({cur_status[least_index+len(possible_ps):].strip()})'
-                cur_status = cur_status[0:least_index+len(possible_ps)].strip()
+                status_date = f' ({cur_status[least_index+len(least_index):].strip()})'
+                cur_status = cur_status[0:least_index+len(least_index)].strip()
+
+        if cur_status.lower() in leave_type:
+            cur_status = "LL/OL/UL/CL"
+        elif "vrs" in cur_status.lower():
+            cur_status = "DUTY"
+            status_date = " (VRS)"
 
         print("AM: {} | {}".format(cur_status, status_date))
         if cur_status.upper() not in ps_am:
@@ -84,11 +85,6 @@ class PS(commands.Cog):
         else:
             cur_status = pm_status.strip()
             status_date = ""
-        if cur_status.lower() in leave_type:
-            cur_status = "LL/OL/UL/CL"
-        elif "vrs" in cur_status.lower():
-            cur_status = "DUTY"
-            status_date = " (VRS)"
         #Alpha: Attempting to handle cases without brackets.
         if len(cur_status.split(" ")) > 1:
             least_index = 9999 #High number to start with
@@ -100,8 +96,15 @@ class PS(commands.Cog):
                     least_index = index
                     least_ps = possible_ps
             if least_index < 9999:
-                status_date = f' ({cur_status[least_index+len(possible_ps):].strip()})'
-                cur_status = cur_status[0:least_index+len(possible_ps)].strip()
+                status_date = f' ({cur_status[least_index+len(least_index):].strip()})'
+                cur_status = cur_status[0:least_index+len(least_index)].strip()
+
+        if cur_status.lower() in leave_type:
+            cur_status = "LL/OL/UL/CL"
+        elif "vrs" in cur_status.lower():
+            cur_status = "DUTY"
+            status_date = " (VRS)"
+
         print("PM: {} | {}".format(cur_status, status_date))
         if cur_status.upper() not in ps_pm:
             ps_pm[cur_status.upper()] = {
@@ -304,7 +307,7 @@ class PS(commands.Cog):
             status = "" #Reset
             line = re.sub(r'[*]', '', line) #Remove * in the line
             if line_no == 0: # First line
-                date = line[-8:] # Grabs last 8 characters from the line
+                date = line[-10:] # Grabs last 8 characters from the line
                 print("Date: {}".format(date))
                 continue #We done here, move on
             if line == self.unit[-3:] or line_no == present or line_no == absent or line == "":
