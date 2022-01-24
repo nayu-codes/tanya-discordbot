@@ -1,0 +1,576 @@
+Date: /01/2022
+2LT Anson
+Doing for 2LT Anson: P | P
+AM: P |
+PM: P |
+ME2 Taufik
+Doing for ME2 Taufik: P | P
+AM: P |
+PM: P |
+ME2 Faisal
+Doing for ME2 Faisal: P | P
+AM: P |
+PM: P |
+ME1 Syahir
+Doing for ME1 Syahir: P | P
+AM: P |
+PM: P |
+ME1 Hazwan
+Doing for ME1 Hazwan: P | P
+AM: P |
+PM: P |
+ME1 Ryan T
+Doing for ME1 Ryan T: P | P
+AM: P |
+PM: P |
+ME1 Hatta
+Doing for ME1 Hatta : P | P
+AM: P |
+PM: P |
+Doing for 2LT Lester: HRWO TILL 240122 | HRWO TILL 240122
+insertps: Found "LL" at index "7" for "HRWO TILL 240122"
+insertps: Found "HRWO" at index "0" for "HRWO TILL 240122"
+AM: HRWO |  (TILL 240122)
+insertps: Found "LL" at index "7" for "HRWO TILL 240122"
+insertps: Found "HRWO" at index "0" for "HRWO TILL 240122"
+PM: HRWO |  (TILL 240122)
+Doing for ME3 Johan: OS Depot | OS Depot
+insertps: Found "OS" at index "0" for "OS Depot"
+AM: OS D |  (epot)
+insertps: Found "OS" at index "0" for "OS Depot"
+PM: OS D |  (epot)
+Doing for ME3 Herman : LL till 250122 | LL till 250122
+insertps: Found "LL" at index "0" for "LL till 250122"
+AM: LL t |  (ill 250122)
+insertps: Found "LL" at index "0" for "LL till 250122"
+PM: LL t |  (ill 250122)
+Doing for ME2 Nixon : OFF | OFF
+AM: OFF |
+PM: OFF |
+Doing for ME2 Jason: OFF | OFF
+AM: OFF |
+PM: OFF |
+Doing for ME2 Yanheng: Duty | Duty
+AM: Duty |
+PM: Duty |
+Doing for ME1 Ryan PB: CSE (CL3/4) | CSE (CL3/4)
+AM: CSE |  (CL3/4)
+PM: CSE |  (CL3/4)
+Doing for ME1 Firdaus: CSE (CL3/4) | CSE (CL3/4)
+AM: CSE |  (CL3/4)
+PM: CSE |  (CL3/4)
+Doing for ME2 Hauming: CSE (Belrex) | CSE (Belrex)
+AM: CSE |  (Belrex)
+PM: CSE |  (Belrex)
+Doing for ME1 Markus: CSE (Belrex) | CSE (Belrex)
+AM: CSE |  (Belrex)
+PM: CSE |  (Belrex)
+Doing for SCT Aniq: CSE (LSCC) | CSE (LSCC)
+AM: CSE |  (LSCC)
+PM: CSE |  (LSCC)
+Doing for ME1 Mai: OS MFT | OS MFT
+insertps: Found "OS" at index "0" for "OS MFT"
+AM: OS M |  (FT)
+insertps: Found "OS" at index "0" for "OS MFT"
+PM: OS M |  (FT)
+Doing for ME1 Kevin: OS MFT | OS MFT
+insertps: Found "OS" at index "0" for "OS MFT"
+AM: OS M |  (FT)
+insertps: Found "OS" at index "0" for "OS MFT"
+PM: OS M |  (FT)
+Doing for 3SG Yong Kang: OS (SOL) | OS (SOL)
+AM: OS |  (SOL)
+PM: OS |  (SOL)
+Doing for ME1 Fitri: LL | LL
+AM: LL/OL/UL/CL |
+PM: LL/OL/UL/CL |
+Status: P
+Doing for CPL Sean: P | P
+AM: P |
+PM: P |
+Status: OS (MFT)
+Doing for 3SG Calvin: OS (MFT) | OS (MFT)
+AM: OS |  (MFT)
+PM: OS |  (MFT)
+Status: OS (MFT)
+Doing for CPL Wee Heng: OS (MFT) | OS (MFT)
+AM: OS |  (MFT)
+PM: OS |  (MFT)
+Status: OS (MFT)
+Doing for 3SG Alex Rowe: OS (MFT) | OS (MFT)
+AM: OS |  (MFT)
+PM: OS |  (MFT)
+Status: OS (MFT)
+Doing for CPL Wu Hai: OS (MFT) | OS (MFT)
+AM: OS |  (MFT)
+PM: OS |  (MFT)
+Status: OS (MFT)
+Doing for CPL Sathwik: OS (MFT) | OS (MFT)
+AM: OS |  (MFT)
+PM: OS |  (MFT)
+Status: OS (MFT)
+Doing for CPL Hadi: OS (MFT) | OS (MFT)
+AM: OS |  (MFT)
+PM: OS |  (MFT)
+Status: OS (MFT)
+Doing for CPL Tim: OS (MFT) | OS (MFT)
+AM: OS |  (MFT)
+PM: OS |  (MFT)
+Status: OS (MFT)
+Doing for LCP Ryan Chia: OS (MFT) | OS (MFT)
+AM: OS |  (MFT)
+PM: OS |  (MFT)
+Status: OS (MFT)
+Doing for CPL Yihao: OS (MFT) | OS (MFT)
+AM: OS |  (MFT)
+PM: OS |  (MFT)
+Status: OS (MFT)
+Doing for LCP Kaushik: OS (MFT) | OS (MFT)
+AM: OS |  (MFT)
+PM: OS |  (MFT)
+Status: OFF
+Doing for LCP Ian: OFF | OFF
+AM: OFF |
+PM: OFF |
+Status: P
+Doing for LCP Rui Jie: P | P
+AM: P |
+PM: P |
+Status: P
+Doing for LCP Zhen Yao: P | P
+AM: P |
+PM: P |
+Status: CSE (LSCC till 180222)
+Doing for SCT Ernest Lim: CSE (LSCC till 180222) | CSE (LSCC till 180222)
+AM: CSE |  (LSCC till 180222)
+PM: CSE |  (LSCC till 180222)
+Status: CSE (LSCC till 180222)
+Doing for SCT Min Yun: CSE (LSCC till 180222) | CSE (LSCC till 180222)
+AM: CSE |  (LSCC till 180222)
+PM: CSE |  (LSCC till 180222)
+Status: P
+Doing for LCP Hong Jim: P | P
+AM: P |
+PM: P |
+Status: P/OFF
+Doing for LCP Ee Zen: P | OFF
+AM: P |
+PM: OFF |
+Status: CSE (CL3/4 301121-080322)
+Doing for LCP Xuyang: CSE (CL3/4 301121-080322) | CSE (CL3/4 301121-080322)
+AM: CSE |  (CL3/4 301121-080322)
+PM: CSE |  (CL3/4 301121-080322)
+Status: CSE (LSCC till 180222)
+Doing for SCT Nor Azri: CSE (LSCC till 180222) | CSE (LSCC till 180222)
+AM: CSE |  (LSCC till 180222)
+PM: CSE |  (LSCC till 180222)
+Status: CSE (LSCC till 180222)
+Doing for SCT Ravi: CSE (LSCC till 180222) | CSE (LSCC till 180222)
+AM: CSE |  (LSCC till 180222)
+PM: CSE |  (LSCC till 180222)
+Status: CSE (LSCC till 180222)
+Doing for SCT Rasyad: CSE (LSCC till 180222) | CSE (LSCC till 180222)
+AM: CSE |  (LSCC till 180222)
+PM: CSE |  (LSCC till 180222)
+Status: P/OFF
+Doing for LCP Hasif: P | OFF
+AM: P |
+PM: OFF |
+Status: OFF
+Doing for LCP Siddharth: OFF | OFF
+AM: OFF |
+PM: OFF |
+Status: P/OFF
+Doing for LCP Damien: P | OFF
+AM: P |
+PM: OFF |
+Status: CSE (CL3/4 051021-TBC)
+Doing for LCP Nathan: CSE (CL3/4 051021-TBC) | CSE (CL3/4 051021-TBC)
+AM: CSE |  (CL3/4 051021-TBC)
+PM: CSE |  (CL3/4 051021-TBC)
+Status: RSO
+Doing for LCP Aqeel : RSO | RSO
+AM: RSO |
+PM: RSO |
+Status: OFF
+Doing for LCP Md Azri: OFF | OFF
+AM: OFF |
+PM: OFF |
+Status: OFF
+Doing for LCP Jia Xiang: OFF | OFF
+AM: OFF |
+PM: OFF |
+Status: CSE (CL3/4 051021 -TBC)
+Doing for LCP Ray: CSE (CL3/4 051021 -TBC) | CSE (CL3/4 051021 -TBC)
+AM: CSE |  (CL3/4 051021 -TBC)
+PM: CSE |  (CL3/4 051021 -TBC)
+Status: CSE (LSCC till 180222)
+Doing for SCT Azryn: CSE (LSCC till 180222) | CSE (LSCC till 180222)
+AM: CSE |  (LSCC till 180222)
+PM: CSE |  (LSCC till 180222)
+Status: OFF
+Doing for LCP Adli: OFF | OFF
+AM: OFF |
+PM: OFF | 
+Status: CSE (LSCC till 180222)
+Doing for SCT Auzafiq: CSE (LSCC till 180222) | CSE (LSCC till 180222)
+AM: CSE |  (LSCC till 180222)
+PM: CSE |  (LSCC till 180222)
+Status: OFF
+Doing for LCP Thaqib: OFF | OFF
+AM: OFF |
+PM: OFF |
+Status: P
+Doing for LCP Rensis : P | P
+AM: P |
+PM: P |
+Status: P/OFF
+Doing for LCP Alex Tam : P | OFF
+AM: P |
+PM: OFF |
+Status: P/OFF
+Doing for LCP Irsyad: P | OFF
+AM: P |
+PM: OFF |
+Status: P/OFF
+Doing for LCP Afiq: P | OFF
+AM: P |
+PM: OFF |
+Status: CSE( CL5 till 290122)
+Doing for LCP Wen Xiang: CSE( CL5 till 290122) | CSE( CL5 till 290122)
+AM: CSE |  (CL5 till 290122)
+PM: CSE |  (CL5 till 290122)
+Status: CSE( CL5 till 290122)
+Doing for LCP Soon Song: CSE( CL5 till 290122) | CSE( CL5 till 290122)
+AM: CSE |  (CL5 till 290122)
+PM: CSE |  (CL5 till 290122)
+Status: P
+Doing for LCP Kai Yun: P | P
+AM: P |
+PM: P |
+Status: CSE (LSCC till 180222)
+Doing for SCT Hou Yin: CSE (LSCC till 180222) | CSE (LSCC till 180222)
+AM: CSE |  (LSCC till 180222)
+PM: CSE |  (LSCC till 180222)
+Status: CSE (CL3/4 051021-TBC)
+Doing for LCP Jun Hua: CSE (CL3/4 051021-TBC) | CSE (CL3/4 051021-TBC)
+AM: CSE |  (CL3/4 051021-TBC)
+PM: CSE |  (CL3/4 051021-TBC)
+Status: P
+Doing for LCP Yu Xuan: P | P
+AM: P |
+PM: P |
+Status: P
+Doing for LCP Jonathan: P | P
+AM: P |
+PM: P |
+Status: CSE (LSCC till 180222)
+Doing for SCT Dong Xuan: CSE (LSCC till 180222) | CSE (LSCC till 180222)
+AM: CSE |  (LSCC till 180222)
+PM: CSE |  (LSCC till 180222)
+Status: CSE (LSCC till 180222)
+Doing for SCT Ai Xin: CSE (LSCC till 180222) | CSE (LSCC till 180222)
+AM: CSE |  (LSCC till 180222)
+PM: CSE |  (LSCC till 180222)
+Status: OFF
+Doing for LCP Wei Qi: OFF | OFF
+AM: OFF |
+PM: OFF |
+Status: CSE (LSCC till 180222)
+Doing for SCT Saajid: CSE (LSCC till 180222) | CSE (LSCC till 180222)
+AM: CSE |  (LSCC till 180222)
+PM: CSE |  (LSCC till 180222)
+Status: P
+Doing for LCP Hong Jun: P | P
+AM: P |
+PM: P |
+Status: CSE (CL3/4 051021-TBC)
+Doing for LCP Ambroise: CSE (CL3/4 051021-TBC) | CSE (CL3/4 051021-TBC)
+AM: CSE |  (CL3/4 051021-TBC)
+PM: CSE |  (CL3/4 051021-TBC)
+Status: CSE (CL3/4 051021-TBC)
+Doing for LCP Alvin: CSE (CL3/4 051021-TBC) | CSE (CL3/4 051021-TBC)
+AM: CSE |  (CL3/4 051021-TBC)
+PM: CSE |  (CL3/4 051021-TBC)
+Status: CSE (CL3/4 051021-TBC)
+Doing for LCP Jia Yang: CSE (CL3/4 051021-TBC) | CSE (CL3/4 051021-TBC)
+AM: CSE |  (CL3/4 051021-TBC)
+PM: CSE |  (CL3/4 051021-TBC)
+{
+  "P": {
+    "names": {
+      "CPL Sean": "",
+      "LCP Rui Jie": "",
+      "LCP Zhen Yao": "",
+      "LCP Hong Jim": "",
+      "LCP Ee Zen": "",
+      "LCP Hasif": "",
+      "LCP Damien": "",
+      "LCP Rensis": "",
+      "LCP Alex Tam": "",
+      "LCP Irsyad": "",
+      "LCP Afiq": "",
+      "LCP Kai Yun": "",
+      "LCP Yu Xuan": "",
+      "LCP Jonathan": "",
+      "LCP Hong Jun": ""
+    }
+  },
+  "OS": {
+    "names": {
+      "3SG Calvin": "(MFT)",
+      "CPL Wee Heng": "(MFT)",
+      "3SG Alex Rowe": "(MFT)",
+      "CPL Wu Hai": "(MFT)",
+      "CPL Sathwik": "(MFT)",
+      "CPL Hadi": "(MFT)",
+      "CPL Tim": "(MFT)",
+      "LCP Ryan Chia": "(MFT)",
+      "CPL Yihao": "(MFT)",
+      "LCP Kaushik": "(MFT)"
+    }
+  },
+  "OFF": {
+    "names": {
+      "LCP Ian": "",
+      "LCP Siddharth": "",
+      "LCP Md Azri": "",
+      "LCP Jia Xiang": "",
+      "LCP Adli": "",
+      "LCP Thaqib": "",
+      "LCP Wei Qi": ""
+    }
+  },
+  "CSE": {
+    "names": {
+      "SCT Ernest Lim": "(LSCC till 180222)",
+      "SCT Min Yun": "(LSCC till 180222)",
+      "LCP Xuyang": "(CL3/4 301121-080322)",
+      "SCT Nor Azri": "(LSCC till 180222)",
+      "SCT Ravi": "(LSCC till 180222)",
+      "SCT Rasyad": "(LSCC till 180222)",
+      "LCP Nathan": "(CL3/4 051021-TBC)",
+      "LCP Ray": "(CL3/4 051021 -TBC)",
+      "SCT Azryn": "(LSCC till 180222)",
+      "SCT Auzafiq": "(LSCC till 180222)",
+      "LCP Wen Xiang": "(CL5 till 290122)",
+      "LCP Soon Song": "(CL5 till 290122)",
+      "SCT Hou Yin": "(LSCC till 180222)",
+      "LCP Jun Hua": "(CL3/4 051021-TBC)",
+      "SCT Dong Xuan": "(LSCC till 180222)",
+      "SCT Ai Xin": "(LSCC till 180222)",
+      "SCT Saajid": "(LSCC till 180222)",
+      "LCP Ambroise": "(CL3/4 051021-TBC)",
+      "LCP Alvin": "(CL3/4 051021-TBC)",
+      "LCP Jia Yang": "(CL3/4 051021-TBC)"
+    }
+  },
+  "RSO": {
+    "names": {
+      "LCP Aqeel": ""
+    }
+  }
+}
+{
+  "P": {
+    "names": {
+      "CPL Sean": "",
+      "LCP Rui Jie": "",
+      "LCP Zhen Yao": "",
+      "LCP Hong Jim": "",
+      "LCP Rensis": "",
+      "LCP Kai Yun": "",
+      "LCP Yu Xuan": "",
+      "LCP Jonathan": "",
+      "LCP Hong Jun": ""
+    }
+  },
+  "OS": {
+    "names": {
+      "3SG Calvin": "(MFT)",
+      "CPL Wee Heng": "(MFT)",
+      "3SG Alex Rowe": "(MFT)",
+      "CPL Wu Hai": "(MFT)",
+      "CPL Sathwik": "(MFT)",
+      "CPL Hadi": "(MFT)",
+      "CPL Tim": "(MFT)",
+      "LCP Ryan Chia": "(MFT)",
+      "CPL Yihao": "(MFT)",
+      "LCP Kaushik": "(MFT)"
+    }
+  },
+  "OFF": {
+    "names": {
+      "LCP Ian": "",
+      "LCP Ee Zen": "",
+      "LCP Hasif": "",
+      "LCP Siddharth": "",
+      "LCP Damien": "",
+      "LCP Md Azri": "",
+      "LCP Jia Xiang": "",
+      "LCP Adli": "",
+      "LCP Thaqib": "",
+      "LCP Alex Tam": "",
+      "LCP Irsyad": "",
+      "LCP Afiq": "",
+      "LCP Wei Qi": ""
+    }
+  },
+  "CSE": {
+    "names": {
+      "SCT Ernest Lim": "(LSCC till 180222)",
+      "SCT Min Yun": "(LSCC till 180222)",
+      "LCP Xuyang": "(CL3/4 301121-080322)",
+      "SCT Nor Azri": "(LSCC till 180222)",
+      "SCT Ravi": "(LSCC till 180222)",
+      "SCT Rasyad": "(LSCC till 180222)",
+      "LCP Nathan": "(CL3/4 051021-TBC)",
+      "LCP Ray": "(CL3/4 051021 -TBC)",
+      "SCT Azryn": "(LSCC till 180222)",
+      "SCT Auzafiq": "(LSCC till 180222)",
+      "LCP Wen Xiang": "(CL5 till 290122)",
+      "LCP Soon Song": "(CL5 till 290122)",
+      "SCT Hou Yin": "(LSCC till 180222)",
+      "LCP Jun Hua": "(CL3/4 051021-TBC)",
+      "SCT Dong Xuan": "(LSCC till 180222)",
+      "SCT Ai Xin": "(LSCC till 180222)",
+      "SCT Saajid": "(LSCC till 180222)",
+      "LCP Ambroise": "(CL3/4 051021-TBC)",
+      "LCP Alvin": "(CL3/4 051021-TBC)",
+      "LCP Jia Yang": "(CL3/4 051021-TBC)"
+    }
+  },
+  "RSO": {
+    "names": {
+      "LCP Aqeel": ""
+    }
+  }
+}
+{
+  "P": {
+    "names": {
+      "2LT Anson": "",
+      "ME2 Taufik": "",
+      "ME2 Faisal": "",
+      "ME1 Syahir": "",
+      "ME1 Hazwan": "",
+      "ME1 Ryan T": "",
+      "ME1 Hatta": ""
+    }
+  },
+  "HRWO": {
+    "names": {
+      "2LT Lester": "(TILL 240122)"
+    }
+  },
+  "OS D": {
+    "names": {
+      "ME3 Johan": "(epot)"
+    }
+  },
+  "LL T": {
+    "names": {
+      "ME3 Herman": "(ill 250122)"
+    }
+  },
+  "OFF": {
+    "names": {
+      "ME2 Nixon": "",
+      "ME2 Jason": ""
+    }
+  },
+  "DUTY": {
+    "names": {
+      "ME2 Yanheng": ""
+    }
+  },
+  "CSE": {
+    "names": {
+      "ME1 Ryan PB": "(CL3/4)",
+      "ME1 Firdaus": "(CL3/4)",
+      "ME2 Hauming": "(Belrex)",
+      "ME1 Markus": "(Belrex)",
+      "SCT Aniq": "(LSCC)"
+    }
+  },
+  "OS M": {
+    "names": {
+      "ME1 Mai": "(FT)",
+      "ME1 Kevin": "(FT)"
+    }
+  },
+  "OS": {
+    "names": {
+      "3SG Yong Kang": "(SOL)"
+    }
+  },
+  "LL/OL/UL/CL": {
+    "names": {
+      "ME1 Fitri": ""
+    }
+  }
+}
+{
+  "P": {
+    "names": {
+      "2LT Anson": "",
+      "ME2 Taufik": "",
+      "ME2 Faisal": "",
+      "ME1 Syahir": "",
+      "ME1 Hazwan": "",
+      "ME1 Ryan T": "",
+      "ME1 Hatta": ""
+    }
+  },
+  "HRWO": {
+    "names": {
+      "2LT Lester": "(TILL 240122)"
+    }
+  },
+  "OS D": {
+    "names": {
+      "ME3 Johan": "(epot)"
+    }
+  },
+  "LL T": {
+    "names": {
+      "ME3 Herman": "(ill 250122)"
+    }
+  },
+  "OFF": {
+    "names": {
+      "ME2 Nixon": "",
+      "ME2 Jason": ""
+    }
+  },
+  "DUTY": {
+    "names": {
+      "ME2 Yanheng": ""
+    }
+  },
+  "CSE": {
+    "names": {
+      "ME1 Ryan PB": "(CL3/4)",
+      "ME1 Firdaus": "(CL3/4)",
+      "ME2 Hauming": "(Belrex)",
+      "ME1 Markus": "(Belrex)",
+      "SCT Aniq": "(LSCC)"
+    }
+  },
+  "OS M": {
+    "names": {
+      "ME1 Mai": "(FT)",
+      "ME1 Kevin": "(FT)"
+    }
+  },
+  "OS": {
+    "names": {
+      "3SG Yong Kang": "(SOL)"
+    }
+  },
+  "LL/OL/UL/CL": {
+    "names": {
+      "ME1 Fitri": ""
+    }
+  }
+}

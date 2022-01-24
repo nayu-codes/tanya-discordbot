@@ -10,8 +10,8 @@ import json
 from discord_components import DiscordComponents, Button, Select, SelectOption, ActionRow
 
 
-class PS(commands.Cog):
 
+class PS(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         with open('config.json') as config_file:
@@ -47,11 +47,6 @@ class PS(commands.Cog):
         else:
             cur_status = am_status.strip()
             status_date = ""
-        if cur_status.lower() in leave_type:
-            cur_status = "LL/OL/UL/CL"
-        elif "vrs" in cur_status.lower():
-            cur_status = "DUTY"
-            status_date = " (VRS)"
 
         #Alpha: Attempting to handle cases without brackets.
         if len(cur_status.split(" ")) > 1:
@@ -64,9 +59,13 @@ class PS(commands.Cog):
                     least_index = index
                     least_ps = possible_ps
             if least_index < 9999:
-                status_date = f' ({cur_status[least_index+len(possible_ps):].strip()})'
-                cur_status = cur_status[0:least_index+len(possible_ps)].strip()
-
+                status_date = f' ({cur_status[least_index+len(least_ps):].strip()})'
+                cur_status = cur_status[0:least_index+len(least_ps)].strip()
+        if cur_status.lower() in leave_type:
+            cur_status = "LL/OL/UL/CL"
+        elif "vrs" in cur_status.lower():
+            cur_status = "DUTY"
+            status_date = " (VRS)"
         print("AM: {} | {}".format(cur_status, status_date))
         if cur_status.upper() not in ps_am:
             ps_am[cur_status.upper()] = {
@@ -100,8 +99,13 @@ class PS(commands.Cog):
                     least_index = index
                     least_ps = possible_ps
             if least_index < 9999:
-                status_date = f' ({cur_status[least_index+len(possible_ps):].strip()})'
-                cur_status = cur_status[0:least_index+len(possible_ps)].strip()
+                status_date = f' ({cur_status[least_index+len(least_ps):].strip()})'
+                cur_status = cur_status[0:least_index+len(least_ps)].strip()
+        if cur_status.lower() in leave_type:
+            cur_status = "LL/OL/UL/CL"
+        elif "vrs" in cur_status.lower():
+            cur_status = "DUTY"
+            status_date = " (VRS)"
         print("PM: {} | {}".format(cur_status, status_date))
         if cur_status.upper() not in ps_pm:
             ps_pm[cur_status.upper()] = {
@@ -293,49 +297,49 @@ class PS(commands.Cog):
         reg_lines = regps.content.split("\n") #Split into lines
         reg_lines = [line for line in reg_lines if len(line.strip())] #Remove lines with only white-spaces / newlines
 
-        for n, line in enumerate(reg_lines):
-            if re.search(r'^P',line) and not re.search(r'^P[a-z]',line): #Finds the Absent line
-                present = n #index of "A"
+        for n, line in enumerate(reg_lines): #to avoid names
+            if re.search(r'^P',line) and not re.search(r'^P[a-z]',line): #Finds the Present line
+                present = n #index of "P"
             if re.search(r'^A',line) and not re.search(r'^A[a-z]',line): #Finds the Absent line
                 absent = n #index of "A"
 
-        for line_no, line in enumerate(reg_lines):
+        for line_no, line in enumerate(reg_lines): #fix later to use encapsulation system
             name = "" #Reset
             status = "" #Reset
             line = re.sub(r'[*]', '', line) #Remove * in the line
             if line_no == 0: # First line
-                date = line[-8:] # Grabs last 8 characters from the line
+                date = line[-10:] # Grabs last 10 characters from the line(date)
                 print("Date: {}".format(date))
                 continue #We done here, move on
-            if line == self.unit[-3:] or line_no == present or line_no == absent or line == "":
+            if line == self.unit[-3:] or line_no == present or line_no == absent or line == "": #for some reason unit is in there
                 continue #Nothing to do here
             if line_no > present and line_no < absent: # Present people
                 print(line)
                 #Alpha: Attempting to split with and without '-'
                 if re.search(r' - ',line):
                     name = line.split(" - ")[0]
-                    status = " - ".join(line.split(" - ")[1:])
-                else:
+                    status = " - ".join(line.split(" - ")[1:]) #what is the point
+                else: # if " - " not found
                     least_index = 9999 #High number to start with
                     for possible_ps in common_ps:
                         index = line.upper().find(f' {possible_ps}')
                         if index + len(possible_ps) + 1 != len(line): #For those that end with the status. E.g. "XYZ VRS", else we will reject this (e.g. "Ah Haut VRS" detected status will be "H" instead of "VRS")
-                            index = -1
-                        if index == -1:
+                            index = -1 
+                        if index == -1: #find all possible indexes
                             index = line.upper().find(f' {possible_ps} ')
                         if index == -1:
                             index = line.upper().find(f' {possible_ps}/')
-                        if index != -1 and index < least_index:
+                        if index != -1 and index < least_index: #lol what
                             print(f'Found: "{possible_ps}" at index "{index}" for "{line}"')
                             least_index = index
-                    if least_index < 9999:
+                    if least_index < 9999: #lowest
                         name = line[0:least_index]
                         status = line[least_index:]
 
                 if re.search(r'/',status): #Finds / in status
                     if re.search(r'[()]',status): #Sees brackets, need to see if the / is in brackets
                         if status.find("/") > status.find(")") or status.find("/") < status.find("("): # )/ or /(
-                            print("{}: Mix parade state".format(name))
+                            print("{}: Mix parade state".format(name)) #accounting for ()/()
                             try: #For )/
                                 am_status = "{})".format(status.split(")/")[0])
                                 pm_status = status.split(")/")[1]
@@ -352,18 +356,18 @@ class PS(commands.Cog):
                             am_status = pm_status = status
                             self.insert_ps(reg_am, reg_pm,name,am_status,pm_status)
                         continue
-                    else:
+                    else: #does not find ()
                         am_status = status.split("/")[0]
                         pm_status = "/".join(status.split("/")[1:])
                         self.insert_ps(reg_am, reg_pm,name,am_status,pm_status)
                         continue
                 else: #Does not find / in status
-                    if len(name) == 0:
+                    if len(name) == 0: #?
                         name = line
                     if len(status) == 0:
                         status = "P"
                     am_status = pm_status = status
-                    self.insert_ps(reg_am, reg_pm,name,am_status,pm_status)
+                    self.insert_ps(reg_am, reg_pm,name,am_status,pm_status) #to be fixed?
 
             if line_no > absent: # Absent People
                 if re.search(r' - ',line):
@@ -931,6 +935,8 @@ class PS(commands.Cog):
 
     @commands.command(brief='Craft Cohorting Group parade states',name='ds')
     async def ds(self, ctx, debug = "false"):
+        with open("cohort.json") as config_file:
+            config = json.load(config_file)
         """
         For crafting parade states based on Cohorting Groups.
         """

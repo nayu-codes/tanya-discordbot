@@ -1,4 +1,5 @@
 *.json
-tanya_v1.py
-tanyav2broken.py
 *.pyc
+-Pipfile.lock
+-output.txt
+-paradestate.txt
