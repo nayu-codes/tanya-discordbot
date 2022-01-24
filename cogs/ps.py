@@ -59,8 +59,8 @@ class PS(commands.Cog):
                     least_index = index
                     least_ps = possible_ps
             if least_index < 9999:
-                status_date = f' ({cur_status[least_index+len(least_index):].strip()})'
-                cur_status = cur_status[0:least_index+len(least_index)].strip()
+                status_date = f' ({cur_status[least_index+len(least_ps):].strip()})'
+                cur_status = cur_status[0:least_index+len(least_ps)].strip()
 
         if cur_status.lower() in leave_type:
             cur_status = "LL/OL/UL/CL"
@@ -96,8 +96,8 @@ class PS(commands.Cog):
                     least_index = index
                     least_ps = possible_ps
             if least_index < 9999:
-                status_date = f' ({cur_status[least_index+len(least_index):].strip()})'
-                cur_status = cur_status[0:least_index+len(least_index)].strip()
+                status_date = f' ({cur_status[least_index+len(least_ps):].strip()})'
+                cur_status = cur_status[0:least_index+len(least_ps)].strip()
 
         if cur_status.lower() in leave_type:
             cur_status = "LL/OL/UL/CL"
