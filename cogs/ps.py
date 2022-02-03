@@ -1058,7 +1058,7 @@ class PS(commands.Cog):
                 nsf_am[status] = {
                     "names": []
                 }
-            if status == "P" and len(self.config["ps"]["excused"]) > 0:
+            if status == "P" and "ps" in self.config and "excused" in self.config["ps"] and len(self.config["ps"]["excused"]) > 0:
                 for name in nsf_am_dict[status]["names"]:
                     if name.lower() in self.config["ps"]["excused"]:
                         if "Excused" not in nsf_am:
@@ -1072,7 +1072,7 @@ class PS(commands.Cog):
             else:
                 for name in nsf_am_dict[status]["names"]:
                     nsf_am[status]["names"].append([name, nsf_am_dict[status]["names"][name]]) # Append [Name, Date]
-        
+
         #Time to generate Parade State! Fml
         am_header = "{}\nUFP Strength for {}\n".format(self.unit, date)
         message_am = ""
