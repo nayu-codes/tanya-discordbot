@@ -14,11 +14,49 @@ class PS(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF|HRWO|SHN|SHRO".split("|")
+        self.rank_order = {
+            "ME4-2": 0,
+            "ME4-1": 1,
+            "ME4": 2, #catch-all for ME4s
+            "LTA": 3,
+            "2LT": 4,
+            "ME3-3": 5,
+            "ME3-2": 6,
+            "ME3-1": 7,
+            "ME3": 8, #catch-all for ME3s
+            "1WO": 9,
+            "2WO": 10,
+            "3WO": 11,
+            "ME2-2": 12,
+            "ME2-1": 13,
+            "ME2": 14, #catch-all for ME2s
+            "MSG": 15,
+            "1SG": 16,
+            "2SG": 17,
+            "ME1-2": 18,
+            "ME1-1": 19,
+            "ME1-T": 20,
+            "ME1T": 21,
+            "ME1": 22,
+            "ME": 23,
+            "3SG": 24,
+            "SCT": 25,
+            "CFC": 26,
+            "CPL": 27,
+            "LCP": 28,
+            "PFC": 29,
+            "PTE": 30,
+            "REC": 31
+        }
         with open('config.json') as config_file:
-            config = json.load(config_file)
+            self.config = json.load(config_file)
 
-        if len(config['GLOBAL_PREFIX']) != 0:
-            self.unit = config["UNIT_TEXT"]
+        if "ps" not in self.config:
+            self.config["ps"] = {}
+
+        if len(self.config['UNIT_TEXT']) != 0:
+            self.unit = self.config["UNIT_TEXT"]
         else:
             self.unit = "[Insert Unit Here]"
 
@@ -35,10 +73,10 @@ class PS(commands.Cog):
                 print(e)
                 pass
 
-    def insert_ps(ctx, ps_am, ps_pm,name,am_status,pm_status):
+    def insert_ps(self, ps_am, ps_pm,name,am_status,pm_status):
         print(f'Doing for {name}: {am_status} | {pm_status}')
-        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF|HRWO|SHN|SHRO"
-        common_ps = common_ps.split("|")
+
+
         leave_type = ["ll","ol", "ul","cl", "ccl", "uccl"]
         #AM Status
         if re.search(r'[()]',am_status):
@@ -52,7 +90,7 @@ class PS(commands.Cog):
         if len(cur_status.split(" ")) > 1:
             least_index = 9999 #High number to start with
             least_ps = ""
-            for possible_ps in common_ps:
+            for possible_ps in self.common_ps:
                 index = cur_status.upper().find(f'{possible_ps} ')
                 if index != -1 and index < least_index:
                     print(f'insertps: Found "{possible_ps}" at index "{index}" for "{cur_status}"')
@@ -89,7 +127,7 @@ class PS(commands.Cog):
         if len(cur_status.split(" ")) > 1:
             least_index = 9999 #High number to start with
             least_ps = ""
-            for possible_ps in common_ps:
+            for possible_ps in self.common_ps:
                 index = cur_status.upper().find(f'{possible_ps} ')
                 if index != -1 and index < least_index:
                     print(f'insertps: Found "{possible_ps}" at index "{index}" for "{cur_status}"')
@@ -114,6 +152,181 @@ class PS(commands.Cog):
             }
         else:
             ps_pm[cur_status.upper()]["names"][name.strip()] = status_date.strip()
+
+    async def parse_nsf_ps(self, ctx, nsf_raw):
+        "Takes the raw message input by user and returns a dictionary of statuses."
+        #Start NSF PS.
+        nsf_am = {}
+        nsf_pm = {}
+        nsf_lines = nsf_raw.split("\n")
+        nsf_lines = [line for line in nsf_lines if len(line.strip())] #Remove lines with only whitespaces / newlines
+
+        for line in nsf_lines:
+            if re.search(r'^PS for [0-9]*/[0-9]*/[0-9]*', line):
+                date = line[-8:]
+                continue
+            name = line.split(" - ")[0]
+            status = " - ".join(line.split(" - ")[1:])
+            if len(status) == 0 and re.search(r'[-]',line):
+                #ALPHA
+                least_index = 9999 #High number to start with
+                for possible_ps in self.common_ps:
+                    index = line.upper().find(f'-{possible_ps}')
+                    if index + len(possible_ps) + 1 != len(line): #For those that end with the status. E.g. "X-YZ-P", else we will reject this (e.g. "Yan-Heng VRS" detected status will be "H" instead of "VRS")
+                        index = -1
+                    if index == -1:
+                        index = line.upper().find(f'- {possible_ps}')
+                        if index + len(possible_ps) + 2 != len(line): #For those that end with the status. E.g. "X-YZ-P", else we will reject this (e.g. "Yan-Heng VRS" detected status will be "H" instead of "VRS")
+                            index = -1
+                    if index == -1:
+                        index = line.upper().find(f'-{possible_ps} ')
+                    if index == -1:
+                        index = line.upper().find(f'-{possible_ps}/')
+                    if index == -1:
+                        index = line.upper().find(f'- {possible_ps} ')
+                    if index == -1:
+                        index = line.upper().find(f'- {possible_ps}/')
+                    if index != -1 and index < least_index:
+                        print(f'Found: "{possible_ps}" at index "{index}" for "{line}"')
+                        least_index = index
+                if least_index < 9999:
+                    name = line[0:least_index]
+                    status = line[least_index+1:]
+                    #BETA SUPPORT
+                else:
+                    await ctx.send("Could not detect parade state for `{}`, please enter the parade state manually: (e.g. `X-YZ - P/OS (ORD)`) ```Format: (name) - (status)```".format(line))
+                    try:
+                        manps = await self.bot.wait_for('message', timeout=90, check=lambda message: message.author == ctx.author) #this will be raw text
+                        manstatus = manps.content
+                        name = manstatus.split(" - ")[0]
+                        status = " - ".join(manstatus.split(" - ")[1:])
+                        if re.search(r'/',status): #Finds / in status
+                            if re.search(r'[()]',status): #Sees brackets, need to see if the / is in brackets
+                                if status.find("/") > status.find(")") or status.find("/") < status.find("("): # )/ or /(
+                                    try: #For )/
+                                        am_status = "{})".format(status.split(")/")[0])
+                                        pm_status = status.split(")/")[1]
+                                    except:
+                                        try: #For /...(
+                                            am_status = status.split("/")[0]
+                                            pm_status = "/".join(status.split("/")[1:])
+                                        except: #Give up, add to error_names
+                                            error_names = "{}\n{}".format(error_names, line)
+                                            continue
+                                    self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
+                                else:
+                                    am_status = pm_status = status
+                                    self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
+                                continue
+                            else:
+                                am_status = status.split("/")[0]
+                                pm_status = "/".join(status.split("/")[1:])
+                                self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
+                                continue
+                        else: #Does not find / in status
+                            am_status = pm_status = status
+                            self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
+                    except asyncio.TimeoutError:
+                        error_names = "{}\n{}".format(error_names, line)
+                        continue
+                    continue
+            elif len(status) == 0: #Those header lines...?
+                continue
+            print("Status: {}".format(status))
+            if re.search(r'/',status): #Finds / in status
+                if re.search(r'[()]',status): #Sees brackets, need to see if the / is in brackets
+                    if status.find("/") > status.find(")") or status.find("/") < status.find("("): # )/ or /(
+                        try: #For )/
+                            am_status = "{})".format(status.split(")/")[0])
+                            pm_status = status.split(")/")[1]
+                        except:
+                            try: #For /...(
+                                am_status = status.split("/")[0]
+                                pm_status = "/".join(status.split("/")[1:])
+                            except: #Give up, add to error_names
+                                error_names = "{}\n{}".format(error_names, line)
+                                continue
+                        self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
+                    else:
+                        am_status = pm_status = status
+                        self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
+                    continue
+                else:
+                    am_status = status.split("/")[0]
+                    pm_status = "/".join(status.split("/")[1:])
+                    self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
+                    continue
+
+            else: #Does not find / in status
+                am_status = pm_status = status
+                self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
+                continue
+        #End NSFs
+        return date, nsf_am, nsf_pm
+
+    @commands.command(brief="Set SRT Excused", name="srtexcused", aliases=['srtexcuse'])
+    async def srtexcused(self, ctx, option="list"):
+        """
+        Create or change a Cohort Group. Please remember to separate names using a new line.
+        """
+        if "excused" not in self.config["ps"]:
+            self.config["ps"]["excused"] = {}
+        if option.lower() == "list":
+            excused_dict = self.config["ps"]["excused"] #dict
+            excused_list = "\n".join([f'{n}. {name.split(" ", 1)[0].upper()} {name.split(" ", 1)[1].title()} - {excused_dict[name]}' for n, name in enumerate(excused_dict, start=1)])
+            if len(excused_list) == 0:
+                await ctx.reply(f'No current namelist set. Use the `set` option to create a namelist.', mention_author=False)
+                return
+            elif len(excused_list) < 2000:
+                await ctx.reply(excused_list, mention_author=False)
+            else: #Total message length is longer than Discord allowed, hence we're splitting it up.
+                start_index = 0
+                message2send = excused_list
+                while start_index < len(message2send):
+                    await ctx.send(message2send[start_index:start_index + 2000])
+                    start_index = start_index + 2000
+            return
+        elif option.lower() == "set": #case-insensitive matching
+            if len(self.config["ps"]["excused"]) > 0:
+                await ctx.reply(f"You're now editing the namelist of people excused for **SRT**. The current namelist is outputted below, please copy the names and edit/add/remove names, then send the updated list. Separate each entry by using a newline (one name per line). This command will timeout in 5 minutes. Reply `cancel` to cancel command.")
+                await ctx.send("\n".join([f'{name.split(" ", 1)[0].upper()} {name.split(" ", 1)[1].title()} - {self.config["ps"]["excused"][name]}' for name in self.config["ps"]["excused"]]))
+            else:
+                await ctx.reply(f"You're now creating a namelist of people excused for **SRT**. Separate each entry by using a newline (one name per line). This command will timeout in 5 minutes. Reply `cancel` to cancel command.")
+            try:
+                srtexcuse_namelist_msg = await self.bot.wait_for('message', check = lambda m: m.author == ctx.author, timeout=300)
+            except asyncio.TimeoutError:
+                await ctx.send("Command timeout.")
+                return
+            if srtexcuse_namelist_msg.content == "cancel":
+                await ctx.send("Command Cancelled.")
+                return
+            srtexcuse_namelist = {
+                name.strip().lower().split(" - ")[0]: name.strip().split(" - ")[1]
+                for name in srtexcuse_namelist_msg.content.split("\n")
+            } #dictionary of [name, info]
+
+            original_names = [name for name in self.config["ps"]["excused"]]
+            new_names = [name for name in srtexcuse_namelist]
+            removed_names = list(set(original_names) - set(new_names))
+            added_names = list(set(new_names) - set(original_names))
+
+            await srtexcuse_namelist_msg.reply("Changes made to `SRT Excuse Namelist`:\n**Removed Names**:\n{}\n\n**Added Names**:\n{}\n\n\n**Are you sure you want to proceed**? Reply `y` to proceed or `n` to cancel.".format('\n'.join([f'{name.split(" ", 1)[0].upper()} {name.split(" ", 1)[1].title()}' for name in removed_names]), '\n'.join([f'{name.split(" ", 1)[0].upper()} {name.split(" ", 1)[1].title()}' for name in added_names])))
+            try:
+                cfm = await self.bot.wait_for('message', check = lambda m: m.author == ctx.author, timeout=30)
+            except asyncio.TimeoutError:
+                await ctx.send("Command timeout.")
+                return
+            if cfm.content == 'y':
+                self.config["ps"]["excused"] = srtexcuse_namelist
+                with open('config.json', 'w', encoding='utf-8') as config_file:
+                    json.dump(self.config, config_file, indent=4)
+                await cfm.reply(f"Successfully amended SRT Excused Namelist.")
+            else:
+                await cfm.reply(f"No changes were made to SRT Excused Namelist. Command cancelled.", mention_author=False)
+            return
+        else:
+            await ctx.send("Invalid option. Only `set` or `list` are valid options.")
+            return
 
     @commands.command(brief='Delete an existing Cohort Group', name="deletecohort", aliases=['delcohort'])
     async def deletecohort(self, ctx, *, cohort_name):
@@ -287,8 +500,8 @@ class PS(commands.Cog):
         error_names = "These people are not added into the Parade State and the total count as I couldn't detect the state. Please manually insert these people into AM/PM parade state and edit the numbers:"
 
         #setup
-        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF|HRWO|SHN|SHRO"
-        common_ps = common_ps.split("|")
+
+
         #Sort Regulars
         reg_am = {}
         reg_pm = {}
@@ -320,7 +533,7 @@ class PS(commands.Cog):
                     status = " - ".join(line.split(" - ")[1:])
                 else:
                     least_index = 9999 #High number to start with
-                    for possible_ps in common_ps:
+                    for possible_ps in self.common_ps:
                         index = line.upper().find(f' {possible_ps}')
                         if index + len(possible_ps) + 1 != len(line): #For those that end with the status. E.g. "XYZ VRS", else we will reject this (e.g. "Ah Haut VRS" detected status will be "H" instead of "VRS")
                             index = -1
@@ -374,7 +587,7 @@ class PS(commands.Cog):
                     status = " - ".join(line.split(" - ")[1:])
                 else:
                     least_index = 9999 #High number to start with
-                    for possible_ps in common_ps:
+                    for possible_ps in self.common_ps:
                         index = line.upper().find(f' {possible_ps}')
                         if index + len(possible_ps) + 1 != len(line): #For those that end with the status. E.g. "XYZ VRS", else we will reject this (e.g. "Ah Haut VRS" detected status will be "H" instead of "VRS")
                             index = -1
@@ -445,7 +658,7 @@ class PS(commands.Cog):
             if len(status) == 0 and re.search(r'[-]',line):
                 #ALPHA
                 least_index = 9999 #High number to start with
-                for possible_ps in common_ps:
+                for possible_ps in self.common_ps:
                     index = line.upper().find(f'-{possible_ps}')
                     if index + len(possible_ps) + 1 != len(line): #For those that end with the status. E.g. "X-YZ-P", else we will reject this (e.g. "Yan-Heng VRS" detected status will be "H" instead of "VRS")
                         index = -1
@@ -542,41 +755,7 @@ class PS(commands.Cog):
         print(json.dumps(reg_am, indent=2))
         print(json.dumps(reg_pm, indent=2))
 
-        #Time to generate Parade State! Fml
-        rank_order = {
-            "ME4-2": 0,
-            "ME4-1": 1,
-            "ME4": 2, #catch-all for ME4s
-            "LTA": 3,
-            "2LT": 4,
-            "ME3-3": 5,
-            "ME3-2": 6,
-            "ME3-1": 7,
-            "ME3": 8, #catch-all for ME3s
-            "1WO": 9,
-            "2WO": 10,
-            "3WO": 11,
-            "ME2-2": 12,
-            "ME2-1": 13,
-            "ME2": 14, #catch-all for ME2s
-            "MSG": 15,
-            "1SG": 16,
-            "2SG": 17,
-            "ME1-2": 18,
-            "ME1-1": 19,
-            "ME1-T": 20,
-            "ME1T": 21,
-            "ME1": 22,
-            "ME": 23,
-            "3SG": 24,
-            "SCT": 25,
-            "CFC": 26,
-            "CPL": 27,
-            "LCP": 28,
-            "PFC": 29,
-            "PTE": 30,
-            "REC": 31
-        }
+
         am_header = "{}\nAM Parade State for {}\n".format(self.unit, date)
         message_am = ""
 
@@ -607,7 +786,7 @@ class PS(commands.Cog):
                 continue
 
             #Sort dict by rebuilding
-            com_am[status]["names"].sort(key=lambda name: rank_order[name[0].split(" ")[0]]) #take the rank part of name to sort by rank
+            com_am[status]["names"].sort(key=lambda name: self.rank_order[name[0].split(" ")[0]]) #take the rank part of name to sort by rank
 
             #Build for message
             status_list = ""
@@ -674,7 +853,7 @@ class PS(commands.Cog):
             if status == "P" and debug != "debug": #Skip present people unless debug flag
                 continue
 
-            com_pm[status]["names"].sort(key=lambda name: rank_order[name[0].split(" ")[0]]) #take the rank part of name to sort by rank
+            com_pm[status]["names"].sort(key=lambda name: self.rank_order[name[0].split(" ")[0]]) #take the rank part of name to sort by rank
 
             #Build for message
             status_list = ""
@@ -739,114 +918,27 @@ class PS(commands.Cog):
         error_names = "These people are not added into the Parade State and the total count as I couldn't detect the state. Please manually insert these people into AM/PM parade state and edit the numbers:"
 
         #setup
-        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF|HRWO|SHN|SHRO"
-        common_ps = common_ps.split("|")
-
-        #Start NSF PS.
+        date, nsf_am_dict, nsf_pm_dict = await self.parse_nsf_ps(ctx, nsfps.content)
         nsf_am = {}
+        for status in nsf_am_dict:
+            if status not in nsf_am:
+                nsf_am[status] = {
+                    "names": []
+                }
+            for name in nsf_am_dict[status]["names"]:
+                nsf_am[status]["names"].append([name, nsf_am_dict[status]["names"][name]]) # Append [Name, Date]
+            if status == "P" and debug != "debug":
+                continue
         nsf_pm = {}
-        nsf_lines = nsfps.content.split("\n")
-        for line in nsf_lines:
-            if re.search(r'^PS for [0-9]*/[0-9]*/[0-9]*',line):
-                date = line[-8:]
+        for status in nsf_pm_dict:
+            if status not in nsf_pm:
+                nsf_pm[status] = {
+                    "names": []
+                }
+            for name in nsf_pm_dict[status]["names"]:
+                nsf_pm[status]["names"].append([name, nsf_pm_dict[status]["names"][name]]) # Append [Name, Date]
+            if status == "P" and debug != "debug":
                 continue
-            name = line.split(" - ")[0]
-            status = " - ".join(line.split(" - ")[1:])
-            if len(status) == 0 and re.search(r'[-]',line):
-                #ALPHA
-                least_index = 9999 #High number to start with
-                for possible_ps in common_ps:
-                    index = line.upper().find(f'-{possible_ps}')
-                    if index + len(possible_ps) + 1 != len(line): #For those that end with the status. E.g. "X-YZ-P", else we will reject this (e.g. "Yan-Heng VRS" detected status will be "H" instead of "VRS")
-                        index = -1
-                    if index == -1:
-                        index = line.upper().find(f'- {possible_ps}')
-                        if index + len(possible_ps) + 2 != len(line): #For those that end with the status. E.g. "X-YZ-P", else we will reject this (e.g. "Yan-Heng VRS" detected status will be "H" instead of "VRS")
-                            index = -1
-                    if index == -1:
-                        index = line.upper().find(f'-{possible_ps} ')
-                    if index == -1:
-                        index = line.upper().find(f'-{possible_ps}/')
-                    if index == -1:
-                        index = line.upper().find(f'- {possible_ps} ')
-                    if index == -1:
-                        index = line.upper().find(f'- {possible_ps}/')
-                    if index != -1 and index < least_index:
-                        print(f'Found: "{possible_ps}" at index "{index}" for "{line}"')
-                        least_index = index
-                if least_index < 9999:
-                    name = line[0:least_index]
-                    status = line[least_index+1:]
-                    #BETA SUPPORT
-                else:
-                    await ctx.send("Could not detect parade state for `{}`, please enter the parade state manually: (e.g. `X-YZ - P/OS (ORD)`) ```Format: (name) - (status)```".format(line))
-                    try:
-                        manps = await self.bot.wait_for('message', timeout=90, check=lambda message: message.author == ctx.author) #this will be raw text
-                        manstatus = manps.content
-                        name = manstatus.split(" - ")[0]
-                        status = " - ".join(manstatus.split(" - ")[1:])
-                        if re.search(r'/',status): #Finds / in status
-                            if re.search(r'[()]',status): #Sees brackets, need to see if the / is in brackets
-                                if status.find("/") > status.find(")") or status.find("/") < status.find("("): # )/ or /(
-                                    try: #For )/
-                                        am_status = "{})".format(status.split(")/")[0])
-                                        pm_status = status.split(")/")[1]
-                                    except:
-                                        try: #For /...(
-                                            am_status = status.split("/")[0]
-                                            pm_status = "/".join(status.split("/")[1:])
-                                        except: #Give up, add to error_names
-                                            error_names = "{}\n{}".format(error_names, line)
-                                            continue
-                                    self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
-                                else:
-                                    am_status = pm_status = status
-                                    self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
-                                continue
-                            else:
-                                am_status = status.split("/")[0]
-                                pm_status = "/".join(status.split("/")[1:])
-                                self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
-                                continue
-                        else: #Does not find / in status
-                            am_status = pm_status = status
-                            self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
-                    except asyncio.TimeoutError:
-                        error_names = "{}\n{}".format(error_names, line)
-                        continue
-                    continue
-            elif len(status) == 0: #Those header lines...?
-                continue
-            print("Status: {}".format(status))
-            if re.search(r'/',status): #Finds / in status
-                if re.search(r'[()]',status): #Sees brackets, need to see if the / is in brackets
-                    if status.find("/") > status.find(")") or status.find("/") < status.find("("): # )/ or /(
-                        try: #For )/
-                            am_status = "{})".format(status.split(")/")[0])
-                            pm_status = status.split(")/")[1]
-                        except:
-                            try: #For /...(
-                                am_status = status.split("/")[0]
-                                pm_status = "/".join(status.split("/")[1:])
-                            except: #Give up, add to error_names
-                                error_names = "{}\n{}".format(error_names, line)
-                                continue
-                        self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
-                    else:
-                        am_status = pm_status = status
-                        self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
-                    continue
-                else:
-                    am_status = status.split("/")[0]
-                    pm_status = "/".join(status.split("/")[1:])
-                    self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
-                    continue
-
-            else: #Does not find / in status
-                am_status = pm_status = status
-                self.insert_ps(nsf_am, nsf_pm,name,am_status,pm_status)
-                continue
-        #End NSFs
         print(json.dumps(nsf_am, indent=2))
         print(json.dumps(nsf_pm, indent=2))
         #Time to generate Parade State! Fml
@@ -858,23 +950,29 @@ class PS(commands.Cog):
                 continue
             #Build for message
             status_list = ""
+
+            #Sort dict by rebuilding
+            nsf_am[status]["names"].sort(key=lambda name: self.rank_order[name[0].split(" ")[0]]) #take the rank part of name to sort by rank
+
+            #Build for message
+            status_list = ""
             for n, name in enumerate(nsf_am[status]["names"], start=1):
                 #status_list += f"\n{name}{f' {com_am[status]["names"][name]}' if len(com_am[status]["names"][name]) else ''}"
-                status_list += "\n{}{}".format(name, f' {nsf_am[status]["names"][name]}' if len(nsf_am[status]["names"][name]) else '')
+                status_list += "\n{}. {}{}".format(n, name[0], f' {name[1]}' if len(name[1]) else '')
             #End build, append to message
             message_am += "\n\n*{}*: {}{}".format(status, len(nsf_am[status]["names"]), status_list)
 
         total = 0
-        for status in nsf_am:
-            total = total + len(nsf_am[status]["names"])
+        for status in nsf_am_dict:
+            total = total + len(nsf_am_dict[status]["names"])
         try:
-            nsf_strength = len(nsf_am["P"]["names"])
+            nsf_strength = len(nsf_am_dict["P"]["names"])
         except:
             nsf_strength = 0
         current = nsf_strength
         nsf_total = 0
-        for status in nsf_am:
-            nsf_total = nsf_total + len(nsf_am[status]["names"])
+        for status in nsf_am_dict:
+            nsf_total = nsf_total + len(nsf_am_dict[status]["names"])
 
 
         am_header = "{}Total Strength: {}\nCurrent Strength: {}\nNSF Strength: {}/{}".format(am_header, total, current, nsf_strength, nsf_total)
@@ -896,23 +994,29 @@ class PS(commands.Cog):
                 continue
             #Build for message
             status_list = ""
+
+            #Sort dict by rebuilding
+            nsf_pm[status]["names"].sort(key=lambda name: self.rank_order[name[0].split(" ")[0]]) #take the rank part of name to sort by rank
+
+            #Build for message
+            status_list = ""
             for n, name in enumerate(nsf_pm[status]["names"], start=1):
-                #status_list += f"\n{name}{f' {com_am[status]["names"][name]}' if len(com_am[status]["names"][name]) else ''}"
-                status_list += "\n{}{}".format(name, f' {nsf_pm[status]["names"][name]}' if len(nsf_pm[status]["names"][name]) else '')
+                #status_list += f"\n{name}{f' {com_pm[status]["names"][name]}' if len(com_pm[status]["names"][name]) else ''}"
+                status_list += "\n{}. {}{}".format(n, name[0], f' {name[1]}' if len(name[1]) else '')
             #End build, append to message
             message_pm += "\n\n*{}*: {}{}".format(status, len(nsf_pm[status]["names"]), status_list)
 
         total = 0
-        for status in nsf_pm:
-            total = total + len(nsf_pm[status]["names"])
+        for status in nsf_pm_dict:
+            total = total + len(nsf_pm_dict[status]["names"])
         try:
-            nsf_strength = len(nsf_pm["P"]["names"])
+            nsf_strength = len(nsf_pm_dict["P"]["names"])
         except:
             nsf_strength = 0
         current = nsf_strength
         nsf_total = 0
-        for status in nsf_pm:
-            nsf_total = nsf_total + len(nsf_pm[status]["names"])
+        for status in nsf_pm_dict:
+            nsf_total = nsf_total + len(nsf_pm_dict[status]["names"])
 
         pm_header = "{}Total Strength: {}\nCurrent Strength: {}\nNSF Strength: {}/{}".format(pm_header, total, current, nsf_strength, nsf_total)
         await ctx.send("```PM Parade State```")
@@ -932,6 +1036,91 @@ class PS(commands.Cog):
         await ctx.send(embed=em)
         return
 
+    @commands.command(brief='Prints SRT Parade State',name='srt')
+    async def srt(self, ctx):
+        """
+        Works the same as the cos command, but only with NSFs.
+        """
+        await ctx.send("Please send the NSF Parade State:")
+        try:
+            nsfps = await self.bot.wait_for('message', timeout=90, check=lambda message: message.author == ctx.author) #this will be raw text
+        except asyncio.TimeoutError:
+            await ctx.send("Command timeout.")
+            return
+
+        error_names = "These people are not added into the Parade State and the total count as I couldn't detect the state. Please manually insert these people into AM/PM parade state and edit the numbers:"
+
+        #setup
+        date, nsf_am_dict, nsf_pm_dict = await self.parse_nsf_ps(ctx, nsfps.content)
+        nsf_am = {}
+        for status in nsf_am_dict:
+            if status not in nsf_am:
+                nsf_am[status] = {
+                    "names": []
+                }
+            if status == "P" and len(self.config["ps"]["excused"]) > 0:
+                for name in nsf_am_dict[status]["names"]:
+                    if name.lower() in self.config["ps"]["excused"]:
+                        if "Excused" not in nsf_am:
+                            nsf_am["Excused"] = {
+                                "names": [[name, f'({self.config["ps"]["excused"][name.lower()]})']] # Append [Name, Info]
+                            }
+                        else:
+                            nsf_am["Excused"]["names"].append([name, f'({self.config["ps"]["excused"][name.lower()]})']) # Append [Name, Info]
+                    else:
+                        nsf_am[status]["names"].append([name, nsf_am_dict[status]["names"][name]]) # Append [Name, Date]
+            else:
+                for name in nsf_am_dict[status]["names"]:
+                    nsf_am[status]["names"].append([name, nsf_am_dict[status]["names"][name]]) # Append [Name, Date]
+        
+        #Time to generate Parade State! Fml
+        am_header = "{}\nUFP Strength for {}\n".format(self.unit, date)
+        message_am = ""
+
+        for status in nsf_am:
+            #Build for message
+            status_list = ""
+
+            #Sort dict by rebuilding
+            nsf_am[status]["names"].sort(key=lambda name: self.rank_order[name[0].split(" ")[0]]) #take the rank part of name to sort by rank
+
+            #Build for message
+            status_list = ""
+            for n, name in enumerate(nsf_am[status]["names"], start=1):
+                #status_list += f"\n{name}{f' {com_am[status]["names"][name]}' if len(com_am[status]["names"][name]) else ''}"
+                status_list += "\n{}. {}{}".format(n, name[0], f' {name[1]}' if len(name[1]) else '')
+            #End build, append to message
+            message_am += "\n\n*{}*: {}{}".format(status, len(nsf_am[status]["names"]), status_list)
+
+        total = 0
+        for status in nsf_am_dict:
+            total = total + len(nsf_am_dict[status]["names"])
+        try:
+            nsf_strength = len(nsf_am_dict["P"]["names"])
+        except:
+            nsf_strength = 0
+        current = nsf_strength
+        nsf_total = 0
+        for status in nsf_am_dict:
+            nsf_total = nsf_total + len(nsf_am_dict[status]["names"])
+
+
+        am_header = "{}\nNSF Strength: {}/{}".format(am_header, nsf_strength, nsf_total)
+        await ctx.send("```UFP Parade State```")
+        if len(f'{am_header}\n{message_am}') < 2000:
+            await ctx.send("{}{}".format(am_header, message_am))
+        else: #Total message length is longer than Discord allowed, hence we're splitting it up.
+            start_index = 0
+            message2send = f'{am_header}{message_am}'
+            while start_index < len(message2send):
+                await ctx.send(message2send[start_index:start_index + 2000])
+                start_index = start_index + 2000
+
+        if error_names != "These people are not added into the Parade State and the total count as I couldn't detect the state. Please manually insert these people into AM/PM parade state and edit the numbers:":
+            await ctx.send(error_names)
+        em = discord.Embed(title="Please remember to do the following before sending the Parade State in the WhatsApp group:", description='1) Make sure the total strength is correct\n2) Make sure the names are listed in descending Rank.', colour=0x00FF00)
+        await ctx.send(embed=em)
+        return
     @commands.command(brief='Craft Cohorting Group parade states',name='ds')
     async def ds(self, ctx, debug = "false"):
         """
@@ -940,7 +1129,7 @@ class PS(commands.Cog):
         try:
             self.cohorts
         except:
-            await ctx.reply(f"No cohorting groups found. Please set using `{config['GLOBAL_PREFIX']}setcohort`", mention_author=False)
+            await ctx.reply(f"No cohorting groups found. Please set using `{self.config['GLOBAL_PREFIX']}setcohort`", mention_author=False)
 
         await ctx.reply("Please send the NSF Parade State:", mention_author=False)
         try:
@@ -952,8 +1141,8 @@ class PS(commands.Cog):
         error_names = "These people are not added into the Parade State and the total count as I couldn't detect the state. Please manually insert these people into AM/PM parade state and edit the numbers:"
 
         #setup
-        common_ps = "P|LL|UL|OL|CCL|UCCL|DUTY|VRS|D|GD|DR|AO|OS|RSI|RSO|MA|MC|HL|H|CSE|WFH|QO|OFF|HRWO|SHN|SHRO"
-        common_ps = common_ps.split("|")
+
+
         namelist = set()
 
         #Start NSF PS.
@@ -969,7 +1158,7 @@ class PS(commands.Cog):
             if len(status) == 0 and re.search(r'[-]',line):
                 #ALPHA
                 least_index = 9999 #High number to start with
-                for possible_ps in common_ps:
+                for possible_ps in self.common_ps:
                     index = line.upper().find(f'-{possible_ps}')
                     if index + len(possible_ps) + 1 != len(line): #For those that end with the status. E.g. "X-YZ-P", else we will reject this (e.g. "Yan-Heng VRS" detected status will be "H" instead of "VRS")
                         index = -1
