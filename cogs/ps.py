@@ -1058,7 +1058,7 @@ class PS(commands.Cog):
                 nsf_am[status] = {
                     "names": []
                 }
-            if status == "P" and "ps" in self.config and "excused" in self.config["ps"] and len(self.config["ps"]["excused"]) > 0:
+            if "ps" in self.config and "excused" in self.config["ps"] and len(self.config["ps"]["excused"]) > 0:
                 for name in nsf_am_dict[status]["names"]:
                     if name.lower() in self.config["ps"]["excused"]:
                         if "Excused" not in nsf_am:
@@ -1093,16 +1093,16 @@ class PS(commands.Cog):
             message_am += "\n\n*{}*: {}{}".format(status, len(nsf_am[status]["names"]), status_list)
 
         total = 0
-        for status in nsf_am_dict:
-            total = total + len(nsf_am_dict[status]["names"])
+        for status in nsf_am:
+            total = total + len(nsf_am[status]["names"])
         try:
-            nsf_strength = len(nsf_am_dict["P"]["names"])
+            nsf_strength = len(nsf_am["P"]["names"])
         except:
             nsf_strength = 0
         current = nsf_strength
         nsf_total = 0
-        for status in nsf_am_dict:
-            nsf_total = nsf_total + len(nsf_am_dict[status]["names"])
+        for status in nsf_am:
+            nsf_total = nsf_total + len(nsf_am[status]["names"])
 
 
         am_header = "{}\nNSF Strength: {}/{}".format(am_header, nsf_strength, nsf_total)
