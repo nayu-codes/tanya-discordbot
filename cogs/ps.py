@@ -1074,7 +1074,7 @@ class PS(commands.Cog):
                     nsf_am[status]["names"].append([name, nsf_am_dict[status]["names"][name]]) # Append [Name, Date]
 
         #Time to generate Parade State! Fml
-        am_header = "{}\nUFP Strength for {}\n".format(self.unit, date)
+        am_header = "{}\nUFP Strength for {}".format(self.unit, date)
         message_am = ""
 
         for status in nsf_am:
@@ -1091,7 +1091,7 @@ class PS(commands.Cog):
                 status_list += "\n{}. {}{}".format(n, name[0], f' {name[1]}' if len(name[1]) else '')
             #End build, append to message
             if status == "P":
-                message_am = "\n*{}*: {}{}{}".format(status, len(nsf_am[status]["names"]), status_list, message_am)
+                message_am = "\n\n*{}*: {}{}{}".format(status, len(nsf_am[status]["names"]), status_list, message_am)
             else:
                 message_am += "\n\n*{}*: {}{}".format(status, len(nsf_am[status]["names"]), status_list)
 
