@@ -1090,7 +1090,10 @@ class PS(commands.Cog):
                 #status_list += f"\n{name}{f' {com_am[status]["names"][name]}' if len(com_am[status]["names"][name]) else ''}"
                 status_list += "\n{}. {}{}".format(n, name[0], f' {name[1]}' if len(name[1]) else '')
             #End build, append to message
-            message_am += "\n\n*{}*: {}{}".format(status, len(nsf_am[status]["names"]), status_list)
+            if status == "P":
+                message_am = "*{}*: {}{}\n\n{}".format(status, len(nsf_am[status]["names"]), status_list, message_am)
+            else:
+                message_am += "\n\n*{}*: {}{}".format(status, len(nsf_am[status]["names"]), status_list)
 
         total = 0
         for status in nsf_am:
